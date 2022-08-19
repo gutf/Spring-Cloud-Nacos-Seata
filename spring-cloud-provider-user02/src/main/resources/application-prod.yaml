@@ -1,0 +1,4 @@
+nacos:
+  consumer:
+    key: key
+    value: value

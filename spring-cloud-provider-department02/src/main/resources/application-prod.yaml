@@ -1,0 +1,4 @@
+nacos:
+  provider:
+    key: key
+    value: value

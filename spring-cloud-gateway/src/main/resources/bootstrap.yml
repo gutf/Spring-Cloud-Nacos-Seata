@@ -1,0 +1,47 @@
+server:
+  port: 6001
+  servlet:
+    context-path: /api/gateway
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: spring-cloud-nacos-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        file-extension: yaml
+    gateway:
+      # 是否开启网关
+      enabled: true
+      discovery:
+        locator:
+          # 默认为false，设为true开启通过微服务创建路由的功能，即可以通过微服务名访问服务
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 路由的ID，没有固定规则但要求唯一，建议配合服务名
+        - id: spring-cloud-department-provider
+          # uri 的协议为 lb，表示启用 Gateway 的负载均衡功能。 lb://serviceName 是 spring cloud gateway 在微服务中自动为我们创建的负载均衡uri
+          uri: lb://spring-cloud-department-provider
+          # 路径相匹配的进行路由
+          predicates:
+            - Path=/api/provider/**
+
+        - id: spring-cloud-user-consumer
+          uri: lb://spring-cloud-user-consumer
+          predicates:
+            - Path=/api/consumer/**
+
+        - id: spring-cloud-user-provider
+          uri: lb://spring-cloud-user-provider
+          predicates:
+            - Path=/api/user/provider/**

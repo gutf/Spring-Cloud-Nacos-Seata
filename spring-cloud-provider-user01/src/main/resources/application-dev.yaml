@@ -1,0 +1,51 @@
+nacos:
+  consumer:
+    key: key
+    value: value
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://127.0.0.1:3306/user?allowMultiQueries=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+
+mybatis-plus:
+  # 以下配置均有默认值,可以不设置
+  global-config:
+    db-config:
+      #数据库类型
+      id-type: auto
+      logic-delete-field: exist
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: true
+    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    call-setters-on-nulls: true
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 使用默认的枚举类型处理器
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+
+seata:
+  application-id: ${spring.application.name}
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      # 微服务必须在一个组，否则服务发现不了，但Seata-server 可以在不同的组中
+      group: DEFAULT_GROUP
+      dataId: seataServer.properties
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: DEFAULT_GROUP
+      username: nacos
+      password: nacos

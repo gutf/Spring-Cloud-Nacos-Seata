@@ -1,0 +1,41 @@
+server:
+  port: 3001
+  servlet:
+    context-path: /api/consumer
+spring:
+  main:
+    allow-circular-references: true
+  profiles:
+    active: dev
+  application:
+    name: spring-cloud-user-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        file-extension: yaml
+
+feign:
+  circuitbreaker:
+    enabled: true
+#熔断器超时不能卸载feign：下面，另起
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: 127.0.0.1
+  command:
+    default:
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          # FeignConfiguration中的attributes获取不到
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 2000
